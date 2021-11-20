@@ -45,6 +45,7 @@ class Scalar {
   void to_float();
   void to_double();
   void output();
+  void calcPrec(std::string &s);
 
  public:
   Scalar();

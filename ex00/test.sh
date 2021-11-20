@@ -23,3 +23,7 @@ tst a
 tst b
 tst 97
 tst $(echo -e "\x01")
+
+tst 0.000000001
+tst 0.1
+tst 1.902754389275

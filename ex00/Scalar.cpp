@@ -10,7 +10,6 @@
 #include <limits>
 #include <sstream>
 #include <string>
-
 Scalar::Scalar() : d_() {}
 
 Scalar::~Scalar() {}
@@ -165,12 +164,30 @@ void Scalar::to_float() {
   if (type == FLT) {
     ss_f_ << GREEN_BOLD_UNDERLINE;
   }
-  ss_f_ << std::fixed << static_cast<float>(d_.d) << "f";
+  std::stringstream ss;
+  std::string s;
+  ss << std::fixed << std::setprecision(1500) << static_cast<float>(d_.d);
+  ss >> s;
+  calcPrec(s);
+  ss_f_ << s << "f";
 }
 
 void Scalar::to_double() {
   if (type == DBL) {
     ss_d_ << GREEN_BOLD_UNDERLINE;
   }
-  ss_d_ << std::fixed << d_.d;
+  std::stringstream ss;
+  std::string s;
+  ss << std::fixed << std::setprecision(1500) << (d_.d);
+  ss >> s;
+  calcPrec(s);
+  ss_d_ << s;
+}
+
+void Scalar::calcPrec(std::string &s) {
+  size_t place = s.find_last_not_of("0");
+  s = s.substr(0, place + 1);
+  if (s[s.size() - 1] == '.') {
+    s += "0";
+  }
 }
