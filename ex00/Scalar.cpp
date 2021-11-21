@@ -164,13 +164,13 @@ void Scalar::int_to_str() {
 
 void Scalar::float_to_str() {
   std::string s;
-  ft_to_str<float>(s);
+  f_to_str<float>(s);
   ss_f_ << s << "f";
 }
 
 void Scalar::double_to_str() {
   std::string s;
-  ft_to_str<double>(s);
+  f_to_str<double>(s);
   ss_d_ << s;
 }
 

@@ -54,17 +54,13 @@ class Scalar {
   void output();
   void calcPrec(std::string &s);
 
-  template <typename TO, typename FROM>
-  TO cast(FROM a) {
-    return static_cast<TO>(a);
-  }
   template <typename T>
   bool isOverlow() {
     return d_.d > std::numeric_limits<T>::max() ||
            d_.d < std::numeric_limits<T>::min();
   }
   template <typename T>
-  void ft_to_str(std::string &s) {
+  void f_to_str(std::string &s) {
     std::stringstream ss;
     ss << std::fixed << std::setprecision(precision_) << static_cast<T>(d_.d);
     ss >> s;
