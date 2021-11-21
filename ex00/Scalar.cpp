@@ -37,7 +37,7 @@ void Scalar::run(const std::string &input) {
 }
 
 Scalar::e_type Scalar::detect_type() {
-  if (ft::is_number(input_)) {
+  if (ft::is_signed_number(input_)) {
     return INT;
   }
   if (input_.size() == 3 && input_[0] == '\'' && input_[2] == '\'') {
