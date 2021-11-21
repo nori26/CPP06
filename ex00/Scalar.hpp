@@ -39,7 +39,6 @@ class Scalar {
   Scalar &operator=(Scalar const &other);
   void parse_to_value();
   Scalar::e_type detect_type();
-  bool isImp(e_type typ);
   void impossible();
   Scalar::e_type parse_to_double();
   void to_char_val();
