@@ -1,4 +1,4 @@
-NAME		:= conv
+NAME		:= serialize
 CXX			:= clang++
 CXXFLAGS	:= -Wall -Werror -Wextra -MMD -MP -std=c++98
 SRCDIR		:= .
@@ -33,7 +33,6 @@ $(NAME)	: $(OBJS)
 	@echo -e "\n$(PURPLE) build	$(GREEN)$@$(RESET)"
 
 test	:
-	bash test.sh
 clean	: rm_reloc
 #	# @make b_clean WITH_BONUS=1
 
