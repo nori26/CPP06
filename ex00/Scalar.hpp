@@ -54,11 +54,6 @@ class Scalar {
   void output();
   void calcPrec(std::string &s);
 
- public:
-  Scalar(const int precision = 1500);
-  ~Scalar();
-  void run(const std::string &input);
-
   template <typename TO, typename FROM>
   TO cast(FROM a) {
     return static_cast<TO>(a);
@@ -75,6 +70,11 @@ class Scalar {
     ss >> s;
     calcPrec(s);
   }
+
+ public:
+  Scalar(const int precision = 1500);
+  ~Scalar();
+  void run(const std::string &input);
 };
 
 #endif
