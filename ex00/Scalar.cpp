@@ -1,6 +1,8 @@
 #include "Scalar.hpp"
 
 #include <stdlib.h>
+
+#include "utils.hpp"
 #define GREEN_BOLD_UNDERLINE "\x1b[32;1;4m"
 #define RESET "\x1b[39;0m"
 
@@ -27,25 +29,16 @@ void Scalar::run(const std::string &input) {
   input_ = input;
   type = detect_type();
   parse_to_value();
-  cast_to_dbl();
   to_str();
   output();
 }
 
 Scalar::e_type Scalar::detect_type() {
-  if (!input_.size()) {
-    return IMP;
+  if (ft::is_number(input_)) {
+    return INT;
   }
-  char last = input_.at(input_.size() - 1);
-
-  if (input_.size() == 1 && !isdigit(last)) {
+  if (input_.size() == 1) {
     return CHAR;
-  }
-  if (input_.find(".", 0) != std::string::npos) {
-    if (last == 'f') {
-      return FLT;
-    }
-    return DBL;
   }
   if (input_ == "-inff" || input_ == "+inff" || input_ == "nanf") {
     return FLT;
@@ -53,55 +46,79 @@ Scalar::e_type Scalar::detect_type() {
   if (input_ == "-inf" || input_ == "+inf" || input_ == "nan") {
     return DBL;
   }
-  return INT;
+  if (input_.find(".", 0) != std::string::npos) {
+    if (input_.at(input_.size() - 1) == 'f') {
+      return FLT;
+    }
+    return DBL;
+  }
+  return IMP;
 }
 
 void Scalar::parse_to_value() {
-  char *error;
-  errno = 0;
-
+  if (type == FLT) {
+    input_ = input_.substr(0, input_.size() - 1);
+  }
+  if (type != CHAR) {
+    type = parse_to_double();
+  };
   switch (type) {
     case IMP:
       return;
     case CHAR:
-      d_.d = cast<double, char>(input_.at(input_.size() - 1));
+      to_char_val();
+      return;
+    case INT:
+      to_int_val();
       return;
     case FLT:
-      input_ = input_.substr(0, input_.size() - 1);
+      to_float_val();
+      return;
+    case DBL:
+      to_double_val();
+      return;
     default:
-      d_.d = strtod(input_.c_str(), &error);
+      return;
+  }
+}
+
+Scalar::e_type Scalar::parse_to_double() {
+  if (!input_.size()) {
+    return IMP;
   }
   char last_char = input_.at(input_.size() - 1);
+  char *error;
 
-  if (errno || *error || isImp(type) || last_char == '.' || input_ == "-nan" ||
-      input_ == "inf") {
+  d_.d = strtod(input_.c_str(), &error);
+  if (*error || last_char == '.') {
+    return IMP;
+  }
+  return type;
+}
+
+void Scalar::to_char_val() {
+  ss_c_ << GREEN_BOLD_UNDERLINE;
+  char c = (input_.at(input_.size() - 1));
+  d_.d = c;
+}
+
+void Scalar::to_int_val() {
+  ss_i_ << GREEN_BOLD_UNDERLINE;
+  if (isOverlow<int>()) {
     type = IMP;
-  }
+    return;
+  };
+  int i = static_cast<int>(d_.d);
+  d_.d = i;
 }
 
-bool Scalar::isImp(e_type typ) {
-  switch (typ) {
-    case CHAR:
-      return d_.bit.exp == expmax || isOverlow<char>();
-    case INT:
-      return d_.bit.exp == expmax || isOverlow<int>();
-    default:
-      return false;
-  }
+void Scalar::to_float_val() {
+  ss_f_ << GREEN_BOLD_UNDERLINE;
+  float f = static_cast<float>(d_.d);
+  d_.d = f;
 }
 
-void Scalar::cast_to_dbl() {
-  switch (type) {
-    case INT:
-      d_.d = cast<int, double>(d_.d);
-      break;
-    case FLT:
-      d_.d = cast<float, double>(d_.d);
-      break;
-    default:
-      return;
-  }
-}
+void Scalar::to_double_val() { ss_d_ << GREEN_BOLD_UNDERLINE; }
 
 void Scalar::to_str() {
   switch (type) {
@@ -109,10 +126,10 @@ void Scalar::to_str() {
       impossible();
       break;
     default:
-      to_char();
-      to_int();
-      to_float();
-      to_double();
+      char_to_str();
+      int_to_str();
+      float_to_str();
+      double_to_str();
   }
 }
 
@@ -123,11 +140,8 @@ void Scalar::impossible() {
   ss_d_ << "impossible";
 }
 
-void Scalar::to_char() {
-  if (type == CHAR) {
-    ss_c_ << GREEN_BOLD_UNDERLINE;
-  }
-  if (isImp(CHAR)) {
+void Scalar::char_to_str() {
+  if (d_.bit.exp == expmax || isOverlow<char>()) {
     ss_c_ << "impossible";
     return;
   }
@@ -138,38 +152,23 @@ void Scalar::to_char() {
   ss_c_ << static_cast<char>(d_.d);
 }
 
-void Scalar::to_int() {
-  if (type == INT) {
-    ss_i_ << GREEN_BOLD_UNDERLINE;
-  }
-  if (isImp(INT)) {
+void Scalar::int_to_str() {
+  if (d_.bit.exp == expmax || isOverlow<int>()) {
     ss_i_ << "impossible";
     return;
   }
   ss_i_ << static_cast<int>(d_.d);
 }
 
-void Scalar::to_float() {
-  if (type == FLT) {
-    ss_f_ << GREEN_BOLD_UNDERLINE;
-  }
-  std::stringstream ss;
+void Scalar::float_to_str() {
   std::string s;
-  ss << std::fixed << std::setprecision(1500) << static_cast<float>(d_.d);
-  ss >> s;
-  calcPrec(s);
+  ft_to_str<float>(s);
   ss_f_ << s << "f";
 }
 
-void Scalar::to_double() {
-  if (type == DBL) {
-    ss_d_ << GREEN_BOLD_UNDERLINE;
-  }
-  std::stringstream ss;
+void Scalar::double_to_str() {
   std::string s;
-  ss << std::fixed << std::setprecision(1500) << (d_.d);
-  ss >> s;
-  calcPrec(s);
+  ft_to_str<double>(s);
   ss_d_ << s;
 }
 

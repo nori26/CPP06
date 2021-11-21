@@ -1,5 +1,6 @@
 #ifndef SCALAR_HPP
 #define SCALAR_HPP
+#include <iomanip>
 #include <limits>
 #include <sstream>
 #include <string>
@@ -31,19 +32,24 @@ class Scalar {
   std::stringstream ss_f_;
   std::stringstream ss_d_;
   std::string input_;
+
   const static unsigned long expmax = 0x7ff;
   Scalar(Scalar const &other);
   Scalar &operator=(Scalar const &other);
   void parse_to_value();
   Scalar::e_type detect_type();
   bool isImp(e_type typ);
-  void cast_to_dbl();
   void impossible();
+  Scalar::e_type parse_to_double();
+  void to_char_val();
+  void to_int_val();
+  void to_float_val();
+  void to_double_val();
   void to_str();
-  void to_char();
-  void to_int();
-  void to_float();
-  void to_double();
+  void char_to_str();
+  void int_to_str();
+  void float_to_str();
+  void double_to_str();
   void output();
   void calcPrec(std::string &s);
 
@@ -60,6 +66,13 @@ class Scalar {
   bool isOverlow() {
     return d_.d > std::numeric_limits<T>::max() ||
            d_.d < std::numeric_limits<T>::min();
+  }
+  template <typename T>
+  void ft_to_str(std::string &s) {
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(1500) << static_cast<T>(d_.d);
+    ss >> s;
+    calcPrec(s);
   }
 };
 
