@@ -123,17 +123,6 @@ void Scalar::impossible() {
   ss_d_ << "impossible";
 }
 
-void Scalar::output() {
-  std::cout << std::left << std::setw(8) << "char"
-            << ": " << ss_c_.str() << RESET << std::endl;
-  std::cout << std::left << std::setw(8) << "int"
-            << ": " << ss_i_.str() << RESET << std::endl;
-  std::cout << std::left << std::setw(8) << "float"
-            << ": " << ss_f_.str() << RESET << std::endl;
-  std::cout << std::left << std::setw(8) << "double"
-            << ": " << ss_d_.str() << RESET << std::endl;
-}
-
 void Scalar::to_char() {
   if (type == CHAR) {
     ss_c_ << GREEN_BOLD_UNDERLINE;
@@ -190,4 +179,15 @@ void Scalar::calcPrec(std::string &s) {
   if (s[s.size() - 1] == '.') {
     s += "0";
   }
+}
+
+void Scalar::output() {
+  std::cout << std::left << std::setw(8) << "char"
+            << ": " << ss_c_.str() << RESET << std::endl;
+  std::cout << std::left << std::setw(8) << "int"
+            << ": " << ss_i_.str() << RESET << std::endl;
+  std::cout << std::left << std::setw(8) << "float"
+            << ": " << ss_f_.str() << RESET << std::endl;
+  std::cout << std::left << std::setw(8) << "double"
+            << ": " << ss_d_.str() << RESET << std::endl;
 }
