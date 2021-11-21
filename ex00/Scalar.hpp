@@ -27,6 +27,7 @@ class Scalar {
   } dbl;
 
   dbl d_;
+  const int precision_;
   std::stringstream ss_c_;
   std::stringstream ss_i_;
   std::stringstream ss_f_;
@@ -54,7 +55,7 @@ class Scalar {
   void calcPrec(std::string &s);
 
  public:
-  Scalar();
+  Scalar(const int precision = 1500);
   ~Scalar();
   void run(const std::string &input);
 
@@ -70,7 +71,7 @@ class Scalar {
   template <typename T>
   void ft_to_str(std::string &s) {
     std::stringstream ss;
-    ss << std::fixed << std::setprecision(1500) << static_cast<T>(d_.d);
+    ss << std::fixed << std::setprecision(precision_) << static_cast<T>(d_.d);
     ss >> s;
     calcPrec(s);
   }

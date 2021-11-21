@@ -12,11 +12,13 @@
 #include <limits>
 #include <sstream>
 #include <string>
-Scalar::Scalar() : d_() {}
+Scalar::Scalar(const int precision) : d_(), precision_(precision) {}
 
 Scalar::~Scalar() {}
 
-Scalar::Scalar(Scalar const &other) { *this = other; }
+Scalar::Scalar(Scalar const &other) : precision_(other.precision_) {
+  *this = other;
+}
 
 Scalar &Scalar::operator=(Scalar const &other) {
   if (this == &other) {
