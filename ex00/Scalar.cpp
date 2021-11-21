@@ -151,7 +151,7 @@ void Scalar::char_to_str() {
     ss_c_ << "Non displayable";
     return;
   }
-  ss_c_ << static_cast<char>(d_.d);
+  ss_c_ << "'" << static_cast<char>(d_.d) << "'";
 }
 
 void Scalar::int_to_str() {
