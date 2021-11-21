@@ -39,7 +39,7 @@ Scalar::e_type Scalar::detect_type() {
   if (ft::is_number(input_)) {
     return INT;
   }
-  if (input_.size() == 1) {
+  if (input_.size() == 3 && input_[0] == '\'' && input_[2] == '\'') {
     return CHAR;
   }
   if (input_ == "-inff" || input_ == "+inff" || input_ == "nanf") {
@@ -100,7 +100,7 @@ Scalar::e_type Scalar::parse_to_double() {
 
 void Scalar::to_char_val() {
   ss_c_ << GREEN_BOLD_UNDERLINE;
-  char c = (input_.at(input_.size() - 1));
+  char c = input_[1];
   d_.d = c;
 }
 
