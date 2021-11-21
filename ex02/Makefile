@@ -1,4 +1,4 @@
-NAME		:= serialize
+NAME		:= type
 CXX			:= clang++
 CXXFLAGS	:= -Wall -Werror -Wextra -MMD -MP -std=c++98
 SRCDIR		:= .
@@ -32,7 +32,13 @@ $(NAME)	: $(OBJS)
 	@$(CXX) $(CXXFLAGS) $(INCLUDE) $(OBJS) -o $@
 	@echo -e "\n$(PURPLE) build	$(GREEN)$@$(RESET)"
 
-test	:
+test	: $(NAME)
+	@for ((i=0;i<100;i++)) do\
+	 A=`./$(NAME) | uniq | wc -l`;\
+	 if [ $$A -ne 1 ];then echo -e "$(PURPLE)KO"; exit 1; fi \
+	done;\
+	echo -e "$(GREEN)OK";
+
 clean	: rm_reloc
 #	# @make b_clean WITH_BONUS=1
 
