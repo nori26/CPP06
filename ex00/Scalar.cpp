@@ -2,16 +2,17 @@
 
 #include <stdlib.h>
 
-#include "utils.hpp"
-#define GREEN_BOLD_UNDERLINE "\x1b[32;1;4m"
-#define RESET "\x1b[39;0m"
-
 #include <cerrno>
 #include <iomanip>
 #include <iostream>
 #include <limits>
 #include <sstream>
 #include <string>
+
+#include "utils.hpp"
+#define GREEN_BOLD_UNDERLINE "\x1b[32;1;4m"
+#define RESET "\x1b[39;0m"
+
 Scalar::Scalar(const int precision) : d_(), precision_(precision) {}
 
 Scalar::~Scalar() {}
